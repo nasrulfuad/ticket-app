@@ -1,0 +1,8 @@
+[*]
+tab_width = 4
+indent_size = 4
+indent_style = space
+
+[*.{jsx,yaml,ts,js}]
+indent_size = 2
+tab_width = 2
