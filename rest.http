@@ -1,0 +1,7 @@
+POST http://ticket.com/api/users/signup
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "12342121"
+}
