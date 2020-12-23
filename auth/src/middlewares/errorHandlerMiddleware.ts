@@ -3,9 +3,9 @@ import { CustomErrorAbstract } from "../errors/CustomErrorsAbstract";
 
 export function errorHandlerMiddleware(
   err: Error,
-  req: Request,
+  _: Request,
   res: Response,
-  next: NextFunction
+  __: NextFunction
 ) {
   if (err instanceof CustomErrorAbstract) {
     return res.status(err.statusCode).json({ errors: err.serializeErrors() });
