@@ -1,6 +1,7 @@
 import express from "express";
 import "express-async-errors";
 import mongoose from "mongoose";
+import cookieSession from "cookie-session";
 import { NotFoundError } from "./errors";
 import { errorHandler } from "./middlewares/error-handler";
 import {
@@ -13,7 +14,15 @@ import {
 const app = express();
 const PORT = 3000;
 
+// app.set("trust proxy", true);
+app.set("trust proxy", 1);
 app.use(express.json());
+app.use(
+  cookieSession({
+    signed: false,
+    secure: true,
+  })
+);
 
 app.use(currentuserRouter);
 app.use(signupRouter);
@@ -28,6 +37,10 @@ app.use(errorHandler);
 
 const start = async () => {
   try {
+    if (!process.env.JWT_KEY) {
+      throw new Error("env JWT_KEY required");
+    }
+
     await mongoose.connect("mongodb://auth-mongo-srv:27017/auth", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
