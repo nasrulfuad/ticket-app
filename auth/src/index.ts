@@ -3,9 +3,9 @@ import "express-async-errors";
 import mongoose from "mongoose";
 import cookieSession from "cookie-session";
 import { NotFoundError } from "./errors";
-import { errorHandler } from "./middlewares/error-handler";
+import { errorHandlerMiddleware } from "./middlewares";
 import {
-  currentuserRouter,
+  currentUserRouter,
   signinRouter,
   signupRouter,
   logoutRouter,
@@ -14,7 +14,6 @@ import {
 const app = express();
 const PORT = 3000;
 
-// app.set("trust proxy", true);
 app.set("trust proxy", 1);
 app.use(express.json());
 app.use(
@@ -24,7 +23,7 @@ app.use(
   })
 );
 
-app.use(currentuserRouter);
+app.use(currentUserRouter);
 app.use(signupRouter);
 app.use(signinRouter);
 app.use(logoutRouter);
@@ -33,7 +32,7 @@ app.all("*", async () => {
   throw new NotFoundError();
 });
 
-app.use(errorHandler);
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {

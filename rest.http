@@ -15,3 +15,7 @@ Content-Type: application/json
     "email": "admin@admin.com",
     "password": "admin"
 }
+
+###
+
+GET http://ticket.com/api/users/current-user

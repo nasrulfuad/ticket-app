@@ -3,7 +3,7 @@ import { body } from "express-validator";
 import jsonwebtoken from "jsonwebtoken";
 
 import { BadRequestError } from "../errors";
-import { validateRequest } from "../middlewares/validate-request";
+import { validateRequestMiddleware } from "../middlewares";
 import { User } from "../models";
 import { Password } from "../services/password";
 
@@ -18,7 +18,7 @@ router.post(
       .notEmpty()
       .withMessage("Password must not be empty"),
   ],
-  validateRequest,
+  validateRequestMiddleware,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
