@@ -2,6 +2,16 @@ POST http://ticket.com/api/users/signup
 Content-Type: application/json
 
 {
+    "email": "admin3@admin.com",
+    "password": "admin"
+}
+
+###
+
+POST http://ticket.com/api/users/signin
+Content-Type: application/json
+
+{
     "email": "admin@admin.com",
     "password": "admin"
 }
