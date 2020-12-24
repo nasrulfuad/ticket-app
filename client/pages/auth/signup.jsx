@@ -1,12 +1,19 @@
 import { useState } from "react";
-import axios from "axios";
+import router from "next/router";
+import useRequest from "../../hooks/useRequest";
 
 const SignUp = () => {
   const [fields, setFields] = useState({
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState([]);
+
+  const { doRequest, errors } = useRequest({
+    url: "/api/users/signup",
+    method: "post",
+    body: fields,
+    onSuccess: () => router.push("/"),
+  });
 
   const onFieldChange = (e) =>
     setFields({
@@ -16,12 +23,7 @@ const SignUp = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("/api/users/signup", fields);
-      console.log(response.data);
-    } catch (error) {
-      setErrors(error.response.data.errors);
-    }
+    await doRequest();
   };
 
   return (
@@ -53,18 +55,7 @@ const SignUp = () => {
                 onChange={onFieldChange}
               />
             </div>
-
-            {errors.length > 0 && (
-              <div className="alert alert-danger">
-                <h4>Oopss...</h4>
-                <ul className="my-0">
-                  {errors.map((error) => (
-                    <li key={error.message}>{error.message}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
+            {errors}
             <button type="submit" className="btn btn-primary">
               Submit
             </button>
