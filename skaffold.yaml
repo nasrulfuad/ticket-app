@@ -18,3 +18,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: nasrulfuad/ticket-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*{.js,.jsx}'
+            dest: .
