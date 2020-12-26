@@ -7,6 +7,7 @@ const start = async () => {
     if (!process.env.JWT_KEY) {
       throw new Error("env JWT_KEY required");
     }
+
     if (!process.env.MONGO_URI) {
       throw new Error("env MONGO_URI required");
     }
@@ -23,7 +24,7 @@ const start = async () => {
   }
 
   app.listen(PORT, () =>
-    console.info(`🚀️ [ Auth ] service is running on port ${PORT} ✈️`)
+    console.info(`🚀️ [ Tickets ] service is running on port ${PORT} ✈️`)
   );
 };
 
