@@ -15,6 +15,7 @@ spec:
       containers:
         - name: auth
           image: nasrulfuad/ticket-auth
+          imagePullPolicy: Never # this is for kubernetes to pull image local
           env:
             - name: JWT_KEY
               valueFrom:

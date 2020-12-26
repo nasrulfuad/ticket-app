@@ -15,6 +15,7 @@ spec:
       containers:
         - name: client
           image: nasrulfuad/ticket-client
+          imagePullPolicy: Never # this is for kubernetes to pull image local
 ---
 apiVersion: v1
 kind: Service
