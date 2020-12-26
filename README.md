@@ -15,5 +15,7 @@
 4. Enable ingress in minikube `minikube addons list` then `minikube addons enable ingress`
 5. Expose deployment for ingress-nginx-controller `kubectl expose deployment ingress-nginx-controller --target-port=80 --type=NodePort -n kube-system`
    if you want to delete it just `kubectl get services -n kube-system`
-6. Run skaffold `skaffold dev`
-7. To get your minikube VM docker type `eval $(minikube -p minikube docker-env)` and then check your docker
+6. To get your minikube VM docker type `eval $(minikube -p minikube docker-env)`
+7. Build the image docker
+8. Run skaffold `skaffold dev`
+9. To remove images that skaffold created, type `skaffold delete`

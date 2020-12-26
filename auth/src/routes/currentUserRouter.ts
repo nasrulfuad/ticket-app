@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { currentUserMiddleware } from "../middlewares";
+import { currentUserMiddleware } from "@nftickets/common";
 
 const router = express.Router();
 

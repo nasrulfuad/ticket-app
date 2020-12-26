@@ -1,9 +1,8 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jsonwebtoken from "jsonwebtoken";
+import { BadRequestError, validateRequestMiddleware } from "@nftickets/common";
 
-import { BadRequestError } from "../errors";
-import { validateRequestMiddleware } from "../middlewares";
 import { User } from "../models";
 import { Password } from "../services/password";
 

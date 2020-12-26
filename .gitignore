@@ -2,3 +2,4 @@
 */yarn.lock
 */.eslintcache
 /client/.next
+/common
