@@ -2,7 +2,12 @@ import express from "express";
 import "express-async-errors";
 import cookieSession from "cookie-session";
 
-import { NotFoundError, errorHandlerMiddleware } from "@nftickets/common";
+import {
+  NotFoundError,
+  errorHandlerMiddleware,
+  currentUserMiddleware,
+} from "@nftickets/common";
+import { store, show, all, update } from "./routes";
 
 const app = express();
 
@@ -14,6 +19,13 @@ app.use(
     secure: process.env.NODE_ENV !== "test",
   })
 );
+
+app.use(currentUserMiddleware);
+
+app.use(all);
+app.use(show);
+app.use(store);
+app.use(update);
 
 app.all("*", async () => {
   throw new NotFoundError();
