@@ -1,18 +1,19 @@
 import mongoose from "mongoose";
 import { Password } from "../services/password";
 
-interface UserInterface {
+interface UserAttrs {
   email: string;
   password: string;
 }
 
-interface UserModelInterface extends mongoose.Model<UserDocumentInterface> {
-  build(attrs: UserInterface): UserDocumentInterface;
-}
-
-interface UserDocumentInterface extends mongoose.Document {
+interface UserDoc extends mongoose.Document {
+  id: string;
   email: string;
   password: string;
+}
+
+interface UserModel extends mongoose.Model<UserDoc> {
+  build(attrs: UserAttrs): UserDoc;
 }
 
 const userSchema = new mongoose.Schema(
@@ -48,9 +49,6 @@ userSchema.pre("save", async function (done) {
   done();
 });
 
-userSchema.statics.build = (attrs: UserInterface) => new User(attrs);
+userSchema.statics.build = (attrs: UserAttrs) => new User(attrs);
 
-export const User = mongoose.model<UserDocumentInterface, UserModelInterface>(
-  "User",
-  userSchema
-);
+export const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
