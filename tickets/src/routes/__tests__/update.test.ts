@@ -2,6 +2,8 @@ import request from "supertest";
 import { Types } from "mongoose";
 
 import app from "../../app";
+import { natsClient } from "../../NatsClient";
+import { Subjects } from "@nftickets/common";
 
 const createTicket = (cookie: string[]) =>
   request(app).post("/api/tickets").set("Cookie", cookie).send({
@@ -80,4 +82,19 @@ it("Update if the ticket provided valid inputs", async () => {
   expect(ticketResponse.body.title).toEqual(newTicket.title);
 
   expect(ticketResponse.body.price).toEqual(newTicket.price);
+});
+
+it("Publishes an event", async () => {
+  const cookie = global.signin();
+  const newTicket = { title: "New some stuff", price: 100 };
+
+  const response = await createTicket(cookie);
+
+  await updateTicket(response.body.id, cookie, newTicket).expect(200);
+
+  expect(natsClient.client.publish).toHaveBeenLastCalledWith(
+    Subjects.TicketUpdated,
+    expect.anything(),
+    expect.anything()
+  );
 });

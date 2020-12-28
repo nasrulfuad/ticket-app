@@ -7,6 +7,8 @@ import {
 } from "@nftickets/common";
 import { body } from "express-validator";
 import { Ticket } from "../models";
+import { natsClient } from "../NatsClient";
+import { TicketUpdatedPublisher } from "../events/publishers/TicketUpdatedPublisher";
 
 const router = express.Router();
 
@@ -35,6 +37,13 @@ router.put(
     });
 
     await ticket.save();
+
+    await new TicketUpdatedPublisher(natsClient.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
 
     return res.json(ticket);
   }
