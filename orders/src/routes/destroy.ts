@@ -5,7 +5,9 @@ import {
   requiredAuthMiddleware,
 } from "@nftickets/common";
 import express, { Request, Response } from "express";
+import { OrderCancelledPublisher } from "../events/publishers/OrderCancelledPublisher";
 import { Order } from "../models";
+import { natsClient } from "../NatsClient";
 const router = express.Router();
 
 router.delete(
@@ -14,7 +16,7 @@ router.delete(
   async (req: Request, res: Response) => {
     const { orderId } = req.params;
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate("ticket");
 
     if (!order) throw new NotFoundError();
 
@@ -24,7 +26,12 @@ router.delete(
 
     await order.save();
 
-    /** Publish an event that the order was cancelled */
+    new OrderCancelledPublisher(natsClient.client).publish({
+      id: order.id,
+      ticket: {
+        id: order.ticket.id,
+      },
+    });
 
     return res.status(204).json(order);
   }
