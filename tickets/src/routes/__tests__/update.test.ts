@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import app from "../../app";
 import { natsClient } from "../../NatsClient";
 import { Subjects } from "@nftickets/common";
+import { Ticket } from "../../models";
 
 const createTicket = (cookie: string[]) =>
   request(app).post("/api/tickets").set("Cookie", cookie).send({
@@ -69,6 +70,7 @@ it("Return 400 if the user provided invalid title or price", async () => {
 
 it("Update if the ticket provided valid inputs", async () => {
   const cookie = global.signin();
+
   const newTicket = { title: "New some stuff", price: 100 };
 
   const response = await createTicket(cookie);
@@ -86,6 +88,7 @@ it("Update if the ticket provided valid inputs", async () => {
 
 it("Publishes an event", async () => {
   const cookie = global.signin();
+
   const newTicket = { title: "New some stuff", price: 100 };
 
   const response = await createTicket(cookie);
@@ -97,4 +100,18 @@ it("Publishes an event", async () => {
     expect.anything(),
     expect.anything()
   );
+});
+
+it("Rejects updates if the ticket is reserved", async () => {
+  const cookie = global.signin();
+
+  const newTicket = { title: "New some stuff", price: 100 };
+
+  const { body } = await createTicket(cookie);
+
+  const ticket = await Ticket.findById(body.id);
+
+  await ticket!.set({ orderId: Types.ObjectId().toHexString() }).save();
+
+  await updateTicket(body.id, cookie, newTicket).expect(400);
 });
