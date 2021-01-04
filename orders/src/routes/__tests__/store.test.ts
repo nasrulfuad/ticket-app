@@ -21,10 +21,7 @@ it("Returns an error if the ticket does not exist", async () => {
 });
 
 it("Return an error if the ticket is already reserved", async () => {
-  const ticket = await Ticket.build({
-    title: "Concert",
-    price: 20,
-  }).save();
+  const ticket = await buildTicket();
 
   await Order.build({
     ticket,
@@ -43,10 +40,7 @@ it("Return an error if the ticket is already reserved", async () => {
 });
 
 it("Reserve a ticket", async () => {
-  const ticket = await Ticket.build({
-    title: "Concert",
-    price: 20,
-  }).save();
+  const ticket = await buildTicket();
 
   await request(app)
     .post("/api/orders")
@@ -58,10 +52,7 @@ it("Reserve a ticket", async () => {
 });
 
 it("Emit an order created event", async () => {
-  const ticket = await Ticket.build({
-    title: "Concert",
-    price: 20,
-  }).save();
+  const ticket = await buildTicket();
 
   await request(app)
     .post("/api/orders")
@@ -73,3 +64,11 @@ it("Emit an order created event", async () => {
 
   expect(natsClient.client.publish).toHaveBeenCalled();
 });
+
+function buildTicket() {
+  return Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    title: "Concert",
+    price: 20,
+  }).save();
+}

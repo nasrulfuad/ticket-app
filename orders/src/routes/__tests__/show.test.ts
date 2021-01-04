@@ -46,6 +46,7 @@ it("Return an error if one user tries to fetch another user order", async () => 
 
 function createTicket(title: string) {
   return Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title,
     price: 20,
   }).save();

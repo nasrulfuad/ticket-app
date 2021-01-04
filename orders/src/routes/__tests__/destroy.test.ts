@@ -51,6 +51,7 @@ it("Emits an event that order was cancelled", async () => {
 
 function createTicket(title: string) {
   return Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title,
     price: 20,
   }).save();

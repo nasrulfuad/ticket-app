@@ -46,13 +46,11 @@ it("Doesn't call ack if the event has a skipped version number", async () => {
 async function setupListener() {
   const listener = new TicketUpdatedListener(natsClient.client);
 
-  const ticket = Ticket.build({
+  const ticket = await Ticket.build({
     id: mongoose.Types.ObjectId().toHexString(),
     title: "Movie",
     price: 10,
-  });
-
-  await ticket.save();
+  }).save();
 
   const data: TicketUpdatedEvent["data"] = {
     id: ticket.id,

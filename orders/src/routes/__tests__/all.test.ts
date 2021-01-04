@@ -1,4 +1,6 @@
 import request from "supertest";
+import mongoose from "mongoose";
+
 import app from "../../app";
 import { Ticket } from "../../models";
 
@@ -42,6 +44,7 @@ it("Fetches orders for a particular user", async () => {
 
 function createTicket(title: string) {
   return Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title,
     price: 20,
   }).save();
