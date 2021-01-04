@@ -1,5 +1,6 @@
 import { TicketUpdatedEvent } from "@nftickets/common";
 import mongoose from "mongoose";
+import { Message } from "node-nats-streaming";
 
 import { Ticket } from "../../../models";
 import { natsClient } from "../../../NatsClient";
@@ -39,10 +40,6 @@ it("Doesn't call ack if the event has a skipped version number", async () => {
   expect(msg.ack).not.toHaveBeenCalled();
 });
 
-/**
- * Setup the listener for create
- * fake data, event and message object
- */
 async function setupListener() {
   const listener = new TicketUpdatedListener(natsClient.client);
 
