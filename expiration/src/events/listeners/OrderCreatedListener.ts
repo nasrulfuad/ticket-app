@@ -11,8 +11,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   async onMessage(data: OrderCreatedEvent["data"], msg: Message) {
     const delay = new Date(data.expiresAt).getTime() - new Date().getTime();
 
-    console.log("Menunggu untuk expired selama : ", delay);
-
     await expirationQueue.add(
       {
         orderId: data.id,

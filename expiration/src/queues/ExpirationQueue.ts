@@ -1,4 +1,6 @@
 import Queue from "bull";
+import { ExpirationCompletePubslisher } from "../events/publishers/ExpirationCompletePublisher";
+import { natsClient } from "../NatsClient";
 
 interface Payload {
   orderId: string;
@@ -11,7 +13,9 @@ const expirationQueue = new Queue<Payload>("order:expiration", {
 });
 
 expirationQueue.process(async (job) => {
-  console.log("Ini sudah expired mas", job.data);
+  new ExpirationCompletePubslisher(natsClient.client).publish({
+    orderId: job.data.orderId,
+  });
 });
 
 export { expirationQueue };
