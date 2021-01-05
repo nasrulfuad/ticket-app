@@ -1,3 +1,4 @@
+import { OrderCreatedListener } from "./events/listeners/OrderCreatedListener";
 import { natsClient } from "./NatsClient";
 const PORT = 3000;
 
@@ -22,6 +23,8 @@ const start = async () => {
 
     process.on("SIGINT", () => natsClient.client.close());
     process.on("SIGTERM", () => natsClient.client.close());
+
+    new OrderCreatedListener(natsClient.client).listen();
   } catch (error) {
     console.log(error);
   }

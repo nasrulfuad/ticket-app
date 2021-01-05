@@ -15,7 +15,7 @@
     ]
   },
   "dependencies": {
-    "@nftickets/common": "^1.0.17",
+    "@nftickets/common": "^1.0.18",
     "@types/bull": "^3.14.4",
     "bull": "^3.20.0",
     "node-nats-streaming": "^0.3.2",
