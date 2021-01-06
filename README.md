@@ -17,6 +17,8 @@
    if you want to delete it just `kubectl get services -n kube-system`
 6. To get your minikube VM docker type `eval $(minikube -p minikube docker-env)`
 7. Build the images docker
-8. Create a `JWT_KEY` env secret `kubectl create secret generic jwt-secret --from-literal=JWT_KEY=some_secret_here`
+8. Create a secret
+    - `JWT_KEY` env secret `kubectl create secret generic jwt-secret --from-literal=JWT_KEY=some_secret_here`
+    - `STRIPE_KEY` env secret `kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=your_stripe_secret_key`
 9. Run skaffold `skaffold dev` or to enable image prune `skaffold dev --no-prune=false --cache-artifacts=false`
 10. To remove images that skaffold created, type `skaffold delete` or `docker system prune -a`
