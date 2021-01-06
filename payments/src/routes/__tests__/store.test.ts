@@ -5,7 +5,7 @@ import { Order } from "../../models";
 import { OrderStatus } from "@nftickets/common";
 import { stripe } from "../../stripe";
 
-jest.mock("../../stripe");
+// jest.mock("../../stripe");
 
 it("Returns a 401 if the user does not logged in", async () => {
   await request(app).post("/api/payments").send({}).expect(401);
@@ -74,11 +74,15 @@ it("Return a 204 with a valid input", async () => {
     global.signin(userId)
   ).expect(201);
 
-  const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+  const stripeCharges = await stripe.charges.list({ limit: 50 });
 
-  expect(chargeOptions.source).toEqual("tok_visa");
-  expect(chargeOptions.amount).toEqual(price * 100);
-  expect(chargeOptions.currency).toEqual("usd");
+  const stripeCharge = stripeCharges.data.find(
+    (charge) => charge.amount === price * 100
+  );
+
+  expect(stripeCharge).toBeDefined();
+
+  expect(stripeCharge!.currency).toEqual("usd");
 });
 
 function requestPayment(
