@@ -9,6 +9,7 @@ import {
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { Order } from "../models";
+import { stripe } from "../stripe";
 
 const router = express.Router();
 
@@ -29,7 +30,13 @@ router.post(
     if (order.status === OrderStatus.Cancelled)
       throw new BadRequestError("The order was expired");
 
-    res.json({ success: true });
+    await stripe.charges.create({
+      currency: "usd",
+      amount: order.price * 100,
+      source: token,
+    });
+
+    return res.status(201).json({ success: true });
   }
 );
 

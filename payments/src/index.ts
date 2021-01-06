@@ -8,6 +8,7 @@ const PORT = 3000;
 const start = async () => {
   try {
     const requiredEnv = [
+      "STRIPE_KEY",
       "JWT_KEY",
       "MONGO_URI",
       "NATS_CLIENT_ID",

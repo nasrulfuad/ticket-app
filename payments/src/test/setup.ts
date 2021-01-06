@@ -14,6 +14,8 @@ jest.mock("../NatsClient");
 
 let mongo: any;
 
+process.env.STRIPE_KEY = "sk_test_ReAhj5GqFf35HWpjgrqTFPfs00TAt9pDUH";
+
 beforeAll(async () => {
   process.env.JWT_KEY = "asdf";
 

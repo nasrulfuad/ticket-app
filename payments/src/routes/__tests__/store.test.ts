@@ -3,6 +3,9 @@ import { Types } from "mongoose";
 import app from "../../app";
 import { Order } from "../../models";
 import { OrderStatus } from "@nftickets/common";
+import { stripe } from "../../stripe";
+
+jest.mock("../../stripe");
 
 it("Returns a 401 if the user does not logged in", async () => {
   await request(app).post("/api/payments").send({}).expect(401);
@@ -51,6 +54,31 @@ it("Return 400 when the order was expired", async () => {
     },
     global.signin(userId)
   ).expect(400);
+});
+
+it("Return a 204 with a valid input", async () => {
+  const userId = Types.ObjectId().toHexString();
+
+  const price = Math.floor(Math.random() * 100000);
+
+  const order = await Order.build({
+    id: Types.ObjectId().toHexString(),
+    version: 0,
+    price,
+    status: OrderStatus.Created,
+    userId,
+  }).save();
+
+  await requestPayment(
+    { token: "tok_visa", orderId: order.id },
+    global.signin(userId)
+  ).expect(201);
+
+  const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+
+  expect(chargeOptions.source).toEqual("tok_visa");
+  expect(chargeOptions.amount).toEqual(price * 100);
+  expect(chargeOptions.currency).toEqual("usd");
 });
 
 function requestPayment(
