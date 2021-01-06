@@ -1,7 +1,7 @@
 import request from "supertest";
 import { Types } from "mongoose";
 import app from "../../app";
-import { Order } from "../../models";
+import { Order, Payment } from "../../models";
 import { OrderStatus } from "@nftickets/common";
 import { stripe } from "../../stripe";
 
@@ -80,9 +80,16 @@ it("Return a 204 with a valid input", async () => {
     (charge) => charge.amount === price * 100
   );
 
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: stripeCharge!.id,
+  });
+
   expect(stripeCharge).toBeDefined();
 
   expect(stripeCharge!.currency).toEqual("usd");
+
+  expect(payment).not.toBeNull();
 });
 
 function requestPayment(

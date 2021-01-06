@@ -8,7 +8,7 @@ import {
 } from "@nftickets/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { Order } from "../models";
+import { Order, Payment } from "../models";
 import { stripe } from "../stripe";
 
 const router = express.Router();
@@ -30,11 +30,16 @@ router.post(
     if (order.status === OrderStatus.Cancelled)
       throw new BadRequestError("The order was expired");
 
-    await stripe.charges.create({
+    const charge = await stripe.charges.create({
       currency: "usd",
       amount: order.price * 100,
       source: token,
     });
+
+    await Payment.build({
+      orderId,
+      stripeId: charge.id,
+    }).save();
 
     return res.status(201).json({ success: true });
   }
