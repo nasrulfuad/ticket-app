@@ -5,7 +5,7 @@ import jsonwebtoken from "jsonwebtoken";
 declare global {
   namespace NodeJS {
     interface Global {
-      signin(): string[];
+      signin(id?: string): string[];
     }
   }
 }
@@ -43,10 +43,10 @@ afterAll(async () => {
 /**
  * Create a cookie with jwt
  */
-global.signin = () => {
+global.signin = (id?: string) => {
   const jwt = jsonwebtoken.sign(
     {
-      id: new mongoose.Types.ObjectId().toHexString(),
+      id: id || new mongoose.Types.ObjectId().toHexString(),
       email: "test@test.com",
     },
     process.env.JWT_KEY!
