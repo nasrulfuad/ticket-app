@@ -8,7 +8,9 @@ import {
 } from "@nftickets/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
+import { PaymentCreatedPublisher } from "../events/publishers/PaymentCreatedPublisher";
 import { Order, Payment } from "../models";
+import { natsClient } from "../NatsClient";
 import { stripe } from "../stripe";
 
 const router = express.Router();
@@ -36,12 +38,18 @@ router.post(
       source: token,
     });
 
-    await Payment.build({
+    const payment = await Payment.build({
       orderId,
       stripeId: charge.id,
     }).save();
 
-    return res.status(201).json({ success: true });
+    await new PaymentCreatedPublisher(natsClient.client).publish({
+      id: payment.id,
+      orderId: payment.orderId,
+      stripeId: payment.stripeId,
+    });
+
+    return res.status(201).json({ id: payment.id });
   }
 );
 
