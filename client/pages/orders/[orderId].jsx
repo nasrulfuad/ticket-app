@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
+import StripeCheckout from "react-stripe-checkout";
+import useRequest from "../../hooks/useRequest";
 
-const OrderShow = ({ order }) => {
+const OrderShow = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState("");
+  const { doRequest, errors } = useRequest({
+    url: "/api/payments",
+    method: "post",
+    body: {
+      orderId: order.id,
+    },
+    onSuccess: (payment) => console.log(payment),
+  });
 
   useEffect(() => {
     const findTimeLeft = () => {
@@ -32,6 +42,13 @@ const OrderShow = ({ order }) => {
     <div className="card">
       <div className="card-body">
         <h1>Time left to pay : {timeLeft} seconds</h1>
+        <StripeCheckout
+          token={({ id }) => doRequest({ token: id })}
+          stripeKey="pk_test_06BDhe8bMV7PA0rrzkohxJYA00lD0Tteur"
+          amount={order.ticket.price * 100}
+          email={currentUser.email}
+        />
+        {errors}
       </div>
     </div>
   );
