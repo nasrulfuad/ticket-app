@@ -7,10 +7,10 @@ export default function useRequest({ url, method, body, onSuccess }) {
   const doRequest = async () => {
     try {
       setErrors(null);
-      await axios[method](url, body);
+      const response = await axios[method](url, body);
 
       if (onSuccess) {
-        onSuccess();
+        onSuccess(response.data);
       }
     } catch (e) {
       setErrors(
