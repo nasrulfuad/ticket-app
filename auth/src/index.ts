@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import app from "./app";
 const PORT = 3000;
 
+// process.env.JWT_KEY = "asiap";
+// process.env.MONGO_URI = "mongodb://192.168.49.2:30001/auth";
+
 const start = async () => {
   try {
     const requiredEnv = ["JWT_KEY", "MONGO_URI"];

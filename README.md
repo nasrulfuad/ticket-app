@@ -22,3 +22,4 @@
     - `STRIPE_KEY` env secret `kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=your_stripe_secret_key`
 9. Run skaffold `skaffold dev` or to enable image prune `skaffold dev --no-prune=false --cache-artifacts=false`
 10. To remove images that skaffold created, type `skaffold delete` or `docker system prune -a`
+11. To expose deployment `kubectl expose deployment depl_name --type=NodePort --port=internal_port`
