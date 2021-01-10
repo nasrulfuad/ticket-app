@@ -10,6 +10,8 @@ import { natsClient } from "./NatsClient";
 const PORT = 3000;
 
 const start = async () => {
+  console.info("Starting up....");
+
   try {
     const requiredEnv = [
       "JWT_KEY",
